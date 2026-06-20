@@ -1,4 +1,4 @@
-﻿locals {
+locals {
   azs = ["us-east-1a", "us-east-1b"]
 }
 
@@ -16,29 +16,29 @@ module "vpc" {
 }
 
 module "ecr" {
-  source         = "../../modules/ecr"
-  for_each       = toset(var.repository_names)
+  source          = "../../modules/ecr"
+  for_each        = toset(var.repository_names)
   repository_name = each.key
-  aws_account_id = var.aws_account_id
-  tags           = local.common_tags
+  aws_account_id  = var.aws_account_id
+  tags            = local.common_tags
 }
 
 module "rds" {
   source = "../../modules/databases"
 
-  project_name                 = var.project_name
-  aws_region                   = var.aws_region
-  tags                         = local.common_tags
-  vpc_id                       = module.vpc.vpc_id
-  private_subnet_ids           = module.vpc.private_subnets
+  project_name                  = var.project_name
+  aws_region                    = var.aws_region
+  tags                          = local.common_tags
+  vpc_id                        = module.vpc.vpc_id
+  private_subnet_ids            = module.vpc.private_subnets
   eks_cluster_security_group_id = module.eks.eks_cluster_security_group_id
 
-  rds_identifier        = var.rds_identifier
-  rds_db_name           = var.project_name
-  rds_username          = var.rds_username
-  rds_password          = var.rds_password
+  rds_identifier          = var.rds_identifier
+  rds_db_name             = var.project_name
+  rds_username            = var.rds_username
+  rds_password            = var.rds_password
   rds_deletion_protection = true
-  dynamodb_table_name   = var.dynamodb_table_name
+  dynamodb_table_name     = var.dynamodb_table_name
 }
 
 module "eks" {
@@ -80,8 +80,10 @@ module "kubernetes" {
 module "argocd" {
   source = "../../modules/argocd"
 
-  tags         = local.common_tags
-  cd_apps_path = "${path.module}/../../CD/apps"
+  tags = local.common_tags
+  cd_apps_path = "${
+    path.module
+  }/../../CD/apps"
 
   depends_on = [module.eks, module.kubernetes]
 }

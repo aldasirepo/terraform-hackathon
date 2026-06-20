@@ -1,8 +1,14 @@
-﻿resource "aws_iam_role" "eks_cluster" {
-  name = "${var.project_name}-eks-cluster-role"
+resource "aws_iam_role" "eks_cluster" {
+  name = "${
+    var.project_name
+  }-eks-cluster-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{ Action = "sts:AssumeRole", Effect = "Allow", Principal = { Service = "eks.amazonaws.com" } }]
+    Statement = [{
+      Action = "sts:AssumeRole", Effect = "Allow", Principal = {
+        Service = "eks.amazonaws.com"
+      }
+    }]
   })
   tags = var.tags
 }
@@ -13,10 +19,16 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
 }
 
 resource "aws_iam_role" "eks_nodes" {
-  name = "${var.project_name}-eks-nodes-role"
+  name = "${
+    var.project_name
+  }-eks-nodes-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{ Action = "sts:AssumeRole", Effect = "Allow", Principal = { Service = "ec2.amazonaws.com" } }]
+    Statement = [{
+      Action = "sts:AssumeRole", Effect = "Allow", Principal = {
+        Service = "ec2.amazonaws.com"
+      }
+    }]
   })
   tags = var.tags
 }
@@ -35,11 +47,22 @@ resource "aws_iam_role_policy_attachment" "eks_ecr_read" {
 }
 
 resource "aws_security_group" "eks_cluster" {
-  name        = "${var.project_name}-eks-cluster-sg"
+  name = "${
+    var.project_name
+  }-eks-cluster-sg"
   description = "SG do cluster EKS"
   vpc_id      = var.vpc_id
-  egress { from_port = 0; to_port = 0; protocol = "-1"; cidr_blocks = ["0.0.0.0/0"] }
-  tags = merge(var.tags, { Name = "${var.project_name}-eks-cluster-sg" })
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = merge(var.tags, {
+    Name = "${
+      var.project_name
+    }-eks-cluster-sg"
+  })
 }
 
 resource "aws_eks_cluster" "main" {
@@ -55,16 +78,18 @@ resource "aws_eks_cluster" "main" {
   }
 
   enabled_cluster_log_types = ["api", "audit", "authenticator"]
-  tags       = var.tags
-  depends_on = [aws_iam_role_policy_attachment.eks_cluster_policy]
+  tags                      = var.tags
+  depends_on                = [aws_iam_role_policy_attachment.eks_cluster_policy]
 }
 
 resource "aws_eks_node_group" "main" {
-  cluster_name    = aws_eks_cluster.main.name
-  node_group_name = "${var.project_name}-ng"
-  node_role_arn   = aws_iam_role.eks_nodes.arn
-  subnet_ids      = var.private_subnet_ids
-  instance_types  = ["t3.medium"]
+  cluster_name = aws_eks_cluster.main.name
+  node_group_name = "${
+    var.project_name
+  }-ng"
+  node_role_arn  = aws_iam_role.eks_nodes.arn
+  subnet_ids     = var.private_subnet_ids
+  instance_types = ["t3.medium"]
 
   scaling_config {
     desired_size = 2
@@ -72,7 +97,9 @@ resource "aws_eks_node_group" "main" {
     min_size     = 1
   }
 
-  update_config { max_unavailable = 1 }
+  update_config {
+    max_unavailable = 1
+  }
   tags = var.tags
 
   depends_on = [

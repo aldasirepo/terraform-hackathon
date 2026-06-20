@@ -1,5 +1,7 @@
-﻿resource "aws_security_group" "rds" {
-  name        = "${var.project_name}-rds-sg"
+resource "aws_security_group" "rds" {
+  name = "${
+    var.project_name
+  }-rds-sg"
   description = "SG do RDS"
   vpc_id      = var.vpc_id
   ingress {
@@ -8,13 +10,23 @@
     protocol        = "tcp"
     security_groups = [var.eks_cluster_security_group_id]
   }
-  tags = merge(var.tags, { Name = "${var.project_name}-rds-sg" })
+  tags = merge(var.tags, {
+    Name = "${
+      var.project_name
+    }-rds-sg"
+  })
 }
 
 resource "aws_db_subnet_group" "main" {
-  name       = "${var.project_name}-rds-subnet"
+  name = "${
+    var.project_name
+  }-rds-subnet"
   subnet_ids = var.private_subnet_ids
-  tags       = merge(var.tags, { Name = "${var.project_name}-rds-subnet" })
+  tags = merge(var.tags, {
+    Name = "${
+      var.project_name
+    }-rds-subnet"
+  })
 }
 
 resource "aws_db_instance" "main" {
@@ -37,7 +49,9 @@ resource "aws_db_instance" "main" {
   backup_window           = var.rds_backup_window
   maintenance_window      = var.rds_maintenance_window
   skip_final_snapshot     = false
-  final_snapshot_identifier = "${var.rds_identifier}-final"
-  deletion_protection     = var.rds_deletion_protection
-  tags                    = var.tags
+  final_snapshot_identifier = "${
+    var.rds_identifier
+  }-final"
+  deletion_protection = var.rds_deletion_protection
+  tags                = var.tags
 }
