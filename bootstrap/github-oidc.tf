@@ -61,13 +61,9 @@ resource "aws_iam_policy" "github_actions" {
         Resource = "*"
       },
       {
-        Effect = "Allow"
-        Action = ["iam:*"]
-        Resource = [
-          "arn:aws:iam::*:role/solidarytech-*",
-          "arn:aws:iam::*:policy/solidarytech-*",
-          "arn:aws:iam::*:oidc-provider/*"
-        ]
+        Effect   = "Allow"
+        Action   = ["iam:*"]
+        Resource = "*"
       },
       {
         Effect   = "Allow"
