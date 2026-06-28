@@ -25,7 +25,7 @@ variable "rds_engine" {
 }
 variable "rds_engine_version" {
   type    = string
-  default = "15.12"
+  default = "16.9"
 }
 variable "rds_instance_class" {
   type    = string
@@ -87,7 +87,7 @@ variable "rds_family" {
 }
 variable "rds_major_engine_version" {
   type    = string
-  default = "15"
+  default = "16"
 }
 variable "rds_parameters" {
   type    = list(map(string))
