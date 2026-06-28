@@ -16,6 +16,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "velero" {
   rule {
     id     = "expire-old-backups"
     status = "Enabled"
+    filter {}
     expiration {
       days = 90
     }
@@ -103,6 +104,7 @@ resource "helm_release" "velero" {
   version          = "6.0.0"
   namespace        = "velero"
   create_namespace = true
+  wait             = false
 
   set {
     name  = "serviceAccount.server.annotations.eks\\.amazonaws\\.com/role-arn"
@@ -152,7 +154,4 @@ resource "helm_release" "velero" {
     name  = "initContainers[0].volumeMounts[0].name"
     value = "plugins"
   }
-
-  timeout = 300
-  wait    = true
 }

@@ -1,3 +1,12 @@
+resource "kubernetes_namespace_v1" "monitoring" {
+  metadata {
+    name = "monitoring"
+    labels = merge(var.tags, {
+      "app.kubernetes.io/managed-by" = "terraform"
+    })
+  }
+}
+
 resource "random_password" "grafana_admin" {
   length           = 20
   special          = true
@@ -7,7 +16,7 @@ resource "random_password" "grafana_admin" {
 resource "kubernetes_secret_v1" "grafana_admin" {
   metadata {
     name      = "grafana-admin-secret"
-    namespace = "monitoring"
+    namespace = kubernetes_namespace_v1.monitoring.metadata[0].name
   }
   data = {
     admin-user     = "admin"
@@ -16,7 +25,8 @@ resource "kubernetes_secret_v1" "grafana_admin" {
   type = "Opaque"
 
   lifecycle {
-    # Evita rotação automática - senha gerenciada externamente após primeiro apply
     ignore_changes = [data]
   }
+
+  depends_on = [kubernetes_namespace_v1.monitoring]
 }
