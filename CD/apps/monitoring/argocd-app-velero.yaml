@@ -6,7 +6,7 @@ metadata:
 spec:
   project: solidarytech
   source:
-    repoURL: https://github.com/SEU_ORG/hackathon-fiap
+    repoURL: https://github.com/aldasirepo/hackathon-fiap
     targetRevision: main
     path: observability/velero
   destination:

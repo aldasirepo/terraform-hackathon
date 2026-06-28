@@ -6,7 +6,7 @@ metadata:
 spec:
   project: solidarytech
   source:
-    repoURL: https://github.com/SEU_ORG/hackathon-DCLT
+    repoURL: https://github.com/aldasirepo/hackathon-fiap
     targetRevision: main
     path: k8s/overlays/production
   destination:
