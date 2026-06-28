@@ -7,3 +7,4 @@ repository_names    = ["solidarytech/ngo-service", "solidarytech/donation-servic
 rds_identifier      = "solidarytech-prod"
 rds_username        = "solidarytech"
 dynamodb_table_name = "solidarytech-volunteers-prod"
+eks_kubernetes_version = "1.32"
