@@ -70,6 +70,6 @@ resource "helm_release" "alb_controller" {
     value = var.vpc_id
   }
 
-  timeout    = 300
-  wait       = true
+  timeout = 300
+  wait    = true
 }

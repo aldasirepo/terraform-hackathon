@@ -153,6 +153,6 @@ resource "helm_release" "velero" {
     value = "plugins"
   }
 
-  timeout    = 300
-  wait       = true
+  timeout = 300
+  wait    = true
 }
