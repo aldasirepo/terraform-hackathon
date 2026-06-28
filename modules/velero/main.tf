@@ -6,7 +6,9 @@ resource "aws_s3_bucket" "velero" {
 
 resource "aws_s3_bucket_versioning" "velero" {
   bucket = aws_s3_bucket.velero.id
-  versioning_configuration { status = "Enabled" }
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "velero" {
@@ -14,14 +16,18 @@ resource "aws_s3_bucket_lifecycle_configuration" "velero" {
   rule {
     id     = "expire-old-backups"
     status = "Enabled"
-    expiration { days = 90 }
+    expiration {
+      days = 90
+    }
   }
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "velero" {
   bucket = aws_s3_bucket.velero.id
   rule {
-    apply_server_side_encryption_by_default { sse_algorithm = "AES256" }
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
   }
 }
 
@@ -102,17 +108,50 @@ resource "helm_release" "velero" {
     name  = "serviceAccount.server.annotations.eks\\.amazonaws\\.com/role-arn"
     value = aws_iam_role.velero.arn
   }
-  set { name = "configuration.backupStorageLocation[0].name";          value = "default" }
-  set { name = "configuration.backupStorageLocation[0].provider";      value = "aws" }
-  set { name = "configuration.backupStorageLocation[0].bucket";        value = aws_s3_bucket.velero.id }
-  set { name = "configuration.backupStorageLocation[0].config.region"; value = var.aws_region }
-  set { name = "configuration.volumeSnapshotLocation[0].name";         value = "default" }
-  set { name = "configuration.volumeSnapshotLocation[0].provider";     value = "aws" }
-  set { name = "configuration.volumeSnapshotLocation[0].config.region"; value = var.aws_region }
-  set { name = "initContainers[0].name";                               value = "velero-plugin-for-aws" }
-  set { name = "initContainers[0].image";                              value = "velero/velero-plugin-for-aws:v1.9.0" }
-  set { name = "initContainers[0].volumeMounts[0].mountPath";          value = "/target" }
-  set { name = "initContainers[0].volumeMounts[0].name";               value = "plugins" }
+  set {
+    name  = "configuration.backupStorageLocation[0].name"
+    value = "default"
+  }
+  set {
+    name  = "configuration.backupStorageLocation[0].provider"
+    value = "aws"
+  }
+  set {
+    name  = "configuration.backupStorageLocation[0].bucket"
+    value = aws_s3_bucket.velero.id
+  }
+  set {
+    name  = "configuration.backupStorageLocation[0].config.region"
+    value = var.aws_region
+  }
+  set {
+    name  = "configuration.volumeSnapshotLocation[0].name"
+    value = "default"
+  }
+  set {
+    name  = "configuration.volumeSnapshotLocation[0].provider"
+    value = "aws"
+  }
+  set {
+    name  = "configuration.volumeSnapshotLocation[0].config.region"
+    value = var.aws_region
+  }
+  set {
+    name  = "initContainers[0].name"
+    value = "velero-plugin-for-aws"
+  }
+  set {
+    name  = "initContainers[0].image"
+    value = "velero/velero-plugin-for-aws:v1.9.0"
+  }
+  set {
+    name  = "initContainers[0].volumeMounts[0].mountPath"
+    value = "/target"
+  }
+  set {
+    name  = "initContainers[0].volumeMounts[0].name"
+    value = "plugins"
+  }
 
   timeout    = 300
   wait       = true
