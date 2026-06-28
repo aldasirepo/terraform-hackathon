@@ -13,7 +13,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "tfstate" {
-  bucket        = "solidarytech-tfstate"
+  bucket        = "solidarytech-tfstate-215671569122"
   force_destroy = false
   tags = {
     Project    = "SolidaryTech"

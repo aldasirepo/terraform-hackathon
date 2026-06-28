@@ -9,7 +9,7 @@ terraform {
     tls        = { source = "hashicorp/tls";        version = "~> 4.0" }
   }
   backend "s3" {
-    bucket         = "solidarytech-tfstate"
+    bucket         = "solidarytech-tfstate-215671569122"
     key            = "production/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "solidarytech-tfstate-lock"
