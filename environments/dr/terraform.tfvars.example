@@ -1,0 +1,7 @@
+aws_region       = "us-west-2"
+project_name     = "solidarytech"
+# Secrets (nunca commitar valores reais):
+# aws_account_id    -> TF_VAR_aws_account_id (GitHub Secret)
+# rds_password      -> TF_VAR_rds_password   (GitHub Secret)
+eks_cluster_name = "solidarytech-dr"
+rds_username     = "solidarytech"

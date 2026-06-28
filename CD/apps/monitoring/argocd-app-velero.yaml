@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: velero-schedule
+  namespace: argocd
+spec:
+  project: solidarytech
+  source:
+    repoURL: https://github.com/SEU_ORG/hackathon-fiap
+    targetRevision: main
+    path: observability/velero
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: velero
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions:
+      - CreateNamespace=true

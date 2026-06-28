@@ -10,3 +10,12 @@ output "eks_cluster_ca" {
 output "eks_cluster_security_group_id" {
   value = aws_security_group.eks_cluster.id
 }
+output "oidc_provider_arn" {
+  value = aws_iam_openid_connect_provider.eks.arn
+}
+output "oidc_provider_url" {
+  value = aws_iam_openid_connect_provider.eks.url
+}
+output "volunteer_service_role_arn" {
+  value = aws_iam_role.volunteer_service.arn
+}
