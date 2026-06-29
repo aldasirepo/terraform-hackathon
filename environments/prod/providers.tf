@@ -52,24 +52,30 @@ data "aws_eks_cluster_auth" "main" {
   depends_on = [module.eks]
 }
 
+locals {
+  eks_host    = try(data.aws_eks_cluster.main.endpoint, "")
+  eks_ca      = try(base64decode(data.aws_eks_cluster.main.certificate_authority[0].data), "")
+  eks_token   = try(data.aws_eks_cluster_auth.main.token, "")
+}
+
 provider "kubernetes" {
-  host                   = data.aws_eks_cluster.main.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.main.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.main.token
+  host                   = local.eks_host
+  cluster_ca_certificate = local.eks_ca
+  token                  = local.eks_token
 }
 
 provider "helm" {
   kubernetes {
-    host                   = data.aws_eks_cluster.main.endpoint
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.main.certificate_authority[0].data)
-    token                  = data.aws_eks_cluster_auth.main.token
+    host                   = local.eks_host
+    cluster_ca_certificate = local.eks_ca
+    token                  = local.eks_token
   }
 }
 
 provider "kubectl" {
-  host                   = data.aws_eks_cluster.main.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.main.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.main.token
+  host                   = local.eks_host
+  cluster_ca_certificate = local.eks_ca
+  token                  = local.eks_token
   load_config_file       = false
 }
 
