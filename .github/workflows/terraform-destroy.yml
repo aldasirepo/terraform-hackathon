@@ -44,12 +44,33 @@ jobs:
         working-directory: environments/${{ github.event.inputs.environment }}
         run: terraform init
 
-      - name: Terraform Destroy
+      - name: Configure kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --name solidarytech-prod \
+            --region ${{ env.AWS_REGION }} || true
+
+      - name: Destroy Helm and Kubernetes resources first
         working-directory: environments/${{ github.event.inputs.environment }}
+        continue-on-error: true
+        env:
+          TF_VAR_aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+          TF_VAR_rds_password:   ${{ secrets.RDS_PASSWORD }}
+        run: |
+          terraform destroy -auto-approve \
+            -target=module.argocd \
+            -target=module.aws_lb_controller \
+            -target=module.kubernetes \
+            -target=module.velero \
+            -var="aws_account_id=${{ secrets.AWS_ACCOUNT_ID }}" \
+            -var="rds_password=${{ secrets.RDS_PASSWORD }}"
+
+      - name: Destroy remaining infrastructure
+        working-directory: environments/${{ github.event.inputs.environment }}
+        env:
+          TF_VAR_aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+          TF_VAR_rds_password:   ${{ secrets.RDS_PASSWORD }}
         run: |
           terraform destroy -auto-approve \
             -var="aws_account_id=${{ secrets.AWS_ACCOUNT_ID }}" \
             -var="rds_password=${{ secrets.RDS_PASSWORD }}"
-        env:
-          TF_VAR_aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
-          TF_VAR_rds_password:   ${{ secrets.RDS_PASSWORD }}
