@@ -77,6 +77,10 @@ resource "aws_eks_cluster" "main" {
     security_group_ids      = [aws_security_group.eks_cluster.id]
   }
 
+  access_config {
+    authentication_mode = "API_AND_CONFIG_MAP"
+  }
+
   enabled_cluster_log_types = ["api", "audit", "authenticator"]
   tags                      = var.tags
   depends_on                = [aws_iam_role_policy_attachment.eks_cluster_policy]
