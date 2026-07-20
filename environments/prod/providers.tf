@@ -53,9 +53,9 @@ data "aws_eks_cluster_auth" "main" {
 }
 
 locals {
-  eks_host    = try(data.aws_eks_cluster.main.endpoint, "")
-  eks_ca      = try(base64decode(data.aws_eks_cluster.main.certificate_authority[0].data), "")
-  eks_token   = try(data.aws_eks_cluster_auth.main.token, "")
+  eks_host  = try(data.aws_eks_cluster.main.endpoint, "")
+  eks_ca    = try(base64decode(data.aws_eks_cluster.main.certificate_authority[0].data), "")
+  eks_token = try(data.aws_eks_cluster_auth.main.token, "")
 }
 
 provider "kubernetes" {
